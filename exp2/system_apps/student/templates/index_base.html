@@ -6,6 +6,10 @@
     <script src="static/js/jquery1.42.min.js" type="text/javascript"></script>
     <script src="static/js/jquery.js"></script>
     <script src="static/js/jquery.superslide.2.1.1.js" type="text/javascript"></script>
+    {% load bootstrap4 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    {% bootstrap_messages %}
     <title>首页</title>
 </head>
 
@@ -16,13 +20,13 @@
         <div class="header_box2">
             <a class="logo_box" href=""><img src="../static/images/logo2.png"/></a>
             {% block nav_box %}
-            <ul class="nav_box">
-                <li class="nav_1"><a class="nav_but" href="/login">个人中心</a></li>
-                <li class="nav_1"><a class="nav_but" href="/login">论坛</a></li>
-                {#             <li class="nav_1"><a class="nav_but" href="/login">选课</a></li>#}
-                {#             <li class="nav_1"><a class="nav_but" href="/login">已选课程</a></li>#}
-                <li class="nav_1"><a class="nav_but" href="/login">首页</a></li>
-            </ul>
+                <ul class="nav_box">
+                    <li class="nav_1"><a class="nav_but" href="/login">个人中心</a></li>
+                    <li class="nav_1"><a class="nav_but" href="/login">论坛</a></li>
+                    {#             <li class="nav_1"><a class="nav_but" href="/login">选课</a></li>#}
+                    {#             <li class="nav_1"><a class="nav_but" href="/login">已选课程</a></li>#}
+                    <li class="nav_1"><a class="nav_but" href="/login">首页</a></li>
+                </ul>
             {% endblock %}
         </div>
         <script>
@@ -81,29 +85,29 @@
 
     <!--内容开始-->
     {% block body %}
-    <div class="content_box">
+        <div class="content_box">
 
-        <ul class="content_box_top">
-            <li>
-                <a href="/login"> <img src="../static/images/icon11.png"/></a>
-                <h3 class="obj_title">课程进度</h3>
-            </li>
-            <li>
-                <a href="/login"><img src="../static/images/icon21.png"/></a>
-                <h3 class="obj_title">选课推荐</h3>
-            </li>
-            <li>
-                <a href="/login"><img src="../static/images/icon31.png"/></a>
-                <h3 class="obj_title">课程讨论</h3>
-            </li>
-            <li>
-                <a href="/login"><img src="../static/images/icon41.png"/></a>
-                <h3 class="obj_title">个人中心</h3>
-            </li>
-        </ul>
+            <ul class="content_box_top">
+                <li>
+                    <a href="/login"> <img src="../static/images/icon11.png"/></a>
+                    <h3 class="obj_title">课程进度</h3>
+                </li>
+                <li>
+                    <a href="/login"><img src="../static/images/icon21.png"/></a>
+                    <h3 class="obj_title">选课推荐</h3>
+                </li>
+                <li>
+                    <a href="/login"><img src="../static/images/icon31.png"/></a>
+                    <h3 class="obj_title">课程讨论</h3>
+                </li>
+                <li>
+                    <a href="/login"><img src="../static/images/icon41.png"/></a>
+                    <h3 class="obj_title">个人中心</h3>
+                </li>
+            </ul>
 
 
-    </div>
+        </div>
     {% endblock %}
     <!--内容结束-->
 
