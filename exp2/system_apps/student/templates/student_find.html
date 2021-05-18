@@ -1,0 +1,41 @@
+{% extends "student_base.html" %}
+
+
+
+{% block info %}
+
+    <div class="inf">
+        <h3>个人课程信息表</h3>
+        {% csrf_token %}
+        <div class="guodong">
+            <table border="1">
+                <tr>
+                    <td>课&nbsp&nbsp程&nbsp&nbsp编&nbsp&nbsp号</td>
+                    <td>课&nbsp&nbsp程&nbsp&nbsp名&nbsp&nbsp称</td>
+                    <td>授&nbsp&nbsp课&nbsp&nbsp教&nbsp&nbsp师</td>
+                    <td>课&nbsp&nbsp程&nbsp&nbsp成&nbsp&nbsp绩</td>
+                    <td>操&nbsp&nbsp&nbsp作</td>
+                </tr>
+                {# {% for course in course_inform_check %} #}
+                {% for info in all_info %}
+                    <tr>
+                        <td>{{ info.course_info.cid }}</td>
+                        <td>{{ info.course_info.name }}</td>
+                        <td>{{ info.teacher_info.name }}</td>
+                        <td>
+                            {% if info.grade == '-1' %}
+                                未给成绩
+                            {% else %}
+                                {{ info.grade }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="del_select_course?cid={{ info.course_info.cid }}">删除</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

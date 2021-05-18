@@ -1,0 +1,29 @@
+{% extends "index_base.html" %}
+
+{% block nav_box %}
+    <ul class="nav_box">
+        <li class="nav_1"><a class="nav_but" href="logout">退出</a></li>
+        <li class="nav_1"><a class="nav_but">{{ sid }}</a></li>
+        <li class="nav_1"><a class="nav_but" href="">首页</a></li>
+    </ul>
+{% endblock %}
+
+{% block body %}
+    <div class="content_box">
+
+        <ul class="content_box_top">
+            <li>
+                <a href="find_no_select_course"> <img src="../static/images/icon11.png"/></a>
+                <h3 class="obj_title">选课</h3>
+            </li>
+            <li>
+                <a href="find_select_course"><img src="../static/images/icon21.png"/></a>
+                <h3 class="obj_title">课程查询</h3>
+            </li>
+        </ul>
+
+
+    </div>
+
+
+{% endblock %}
