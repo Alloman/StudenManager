@@ -41,17 +41,6 @@ class Opt_impl(Opt_DB):
         print("find data: ", data, "to table student")
         return
 
-    def insert_class(self, classname, leader_sid):
-        pass
-
-    def del_class(self, classname):
-        pass
-
-    def alter_class(self, classname):
-        pass
-
-    def find_class(self, classname):
-        pass
 
 
 if __name__ == '__main__':

@@ -5,6 +5,7 @@ from .Student import Student
 
 class Classroom:
     def __init__(self):
+        self.__cid = ''
         self.__classname = ""
         self.__leader_sid = ""
         self.__students = []
