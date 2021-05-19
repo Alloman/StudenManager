@@ -11,17 +11,20 @@ def student_index(request):
     return render(request, "student_base.html", locals())
 
 # student function
+
+# select funcsion
 def select_course(request):
 
     cid = request.GET['cid']
     sid = request.session["user_id"]
+    cls_name  = request.session["cls_name"]
 
     info = Course.objects.filter(cid=cid)[0]
 
     Select_Course.objects.create(cid=info.cid, sid=sid, tid=info.tid)
 
     sc_list = Select_Course.objects.filter(sid=sid)
-    all_c = Course.objects.all()
+    all_c = Course.objects.filter(cls_name=cls_name)
     all_cid = []
     for sc in sc_list:
         all_cid.append(sc.cid)
@@ -45,9 +48,10 @@ def select_course(request):
 
 def find_no_select_course(request):
     sid = request.session["user_id"]
+    cls_name = request.session["cls_name"]
 
     sc_list = Select_Course.objects.filter(sid=sid)
-    all_c = Course.objects.all()
+    all_c = Course.objects.filter(cls_name=cls_name)
     all_cid = []
     for sc in sc_list:
         all_cid.append(sc.cid)
@@ -68,6 +72,10 @@ def find_no_select_course(request):
 
     return render(request, "student_select.html", locals())
 
+
+
+
+# delete function
 def del_select_course(request):
 
     cid = request.GET['cid']

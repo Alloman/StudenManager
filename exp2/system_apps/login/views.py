@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import User
+from ..student.models import Student
 
 # Create your views here.
 
@@ -34,6 +35,7 @@ def login_view(request):
                     return redirect("/teacher")
                     # return render(request, "teacher_base.html", locals())
                 else:
+                    request.session["cls_name"] = Student.objects.get(sid=sid).cls_name
                     return redirect("/student")
                     # return render(request, "student_base.html", locals())
             else:

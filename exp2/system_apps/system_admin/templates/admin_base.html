@@ -2,7 +2,7 @@
 
 {% block nav_box %}
     <ul class="nav_box">
-        <li class="nav_1"><a class="nav_but" href="logout">退出</a></li>
+        <li class="nav_1"><a class="nav_but" href="/login/logout">退出</a></li>
         <li class="nav_1"><a class="nav_but">{{ sid }}</a></li>
         <li class="nav_1"><a class="nav_but" href="">首页</a></li>
     </ul>
@@ -13,17 +13,29 @@
 
         <ul class="content_box_top">
             <li>
-                <a href="find_no_select_course"> <img src="../static/images/icon11.png"/></a>
-                <h3 class="obj_title">选课</h3>
+                <a href="find_student"> <img src="../static/images/icon11.png"/></a>
+                <h3 class="obj_title">学生管理</h3>
             </li>
             <li>
-                <a href="find_select_course"><img src="../static/images/icon21.png"/></a>
-                <h3 class="obj_title">课程查询</h3>
+                <a href="find_teacher"><img src="../static/images/icon21.png"/></a>
+                <h3 class="obj_title">教师管理</h3>
+            </li>
+            <li>
+                <a href="find_course"><img src="../static/images/icon31.png"/></a>
+                <h3 class="obj_title">课程管理</h3>
+            </li>
+            <li>
+                <a href="find_grade"><img src="../static/images/icon41.png"/></a>
+                <h3 class="obj_title">成绩查询</h3>
             </li>
         </ul>
 
 
     </div>
+
+    {% block info %}
+
+    {% endblock %}
 
 
 {% endblock %}

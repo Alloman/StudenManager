@@ -1,0 +1,41 @@
+{% extends "admin_base.html" %}
+
+{% block info %}
+    <div class="inf">
+        <h3>课程信息表</h3>
+        {% csrf_token %}
+        <div>
+            <a class="btn btn-primary">+ 添加</a>
+        </div>
+        <div class="guodong">
+            <table class="table table-hover">
+                <tr class="table-primary">
+                    <td>课&nbsp&nbsp程&nbsp&nbsp编&nbsp&nbsp号</td>
+                    <td>课&nbsp&nbsp程&nbsp&nbsp名&nbsp&nbsp称</td>
+                    <td>教&nbsp&nbsp&nbsp师</td>
+                    <td>学&nbsp&nbsp&nbsp分</td>
+                    <td>培&nbsp&nbsp养&nbsp&nbsp方&nbsp&nbsp案</td>
+                </tr>
+                {# {% for course in course_inform_check %} #}
+                {% for info in all_info %}
+                    <tr>
+                        <td>{{ info.course_info.cid }}</td>
+                        <td>{{ info.course_info.name }}</td>
+                        <td>{{ info.teacher_info.name }}</td>
+                        <td>
+                            {% if info.grade == '-1' %}
+                                未给成绩
+                            {% else %}
+                                {{ info.grade }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a class="btn btn-danger" href="del_select_course?sid={{ info.course_info.cid }}">修改</a>
+                            <a class="btn btn-danger" href="del_select_course?sid={{ info.course_info.cid }}">删除</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+{% endblock %}
