@@ -1,29 +1,38 @@
 {% extends "teacher_base.html" %}
 
-{% block nav_box %}
-    <ul class="nav_box">
-        <li class="nav_1"><a class="nav_but" href="/login/logout">退出</a></li>
-        <li class="nav_1"><a class="nav_but"></a></li>
-        <li class="nav_1"><a class="nav_but" href="">首页</a></li>
-    </ul>
-{% endblock %}
-
-{% block body %}
-    <div class="content_box">
-
-        <ul class="content_box_top">
-            <li>
-                <a href="find_no_grade_info"><img src="../static/images/icon31.png"/></a>
-                <h3 class="obj_title">提交成绩</h3>
-            </li>
-            <li>
-                <a href="find_teach_student"> <img src="../static/images/icon41.png"/></a>
-                <h3 class="obj_title">课程查询</h3>
-            </li>
-        </ul>
-
-
+{% block info %}
+    <div class="inf">
+        <h3>学生成绩信息表</h3>
+        {% csrf_token %}
+        <div class="guodong">
+            <table class="table table-hover">
+                <tr class="table-primary">
+                    <td>课&nbsp&nbsp程&nbsp&nbsp编&nbsp&nbsp号</td>
+                    <td>课&nbsp&nbsp程&nbsp&nbsp名&nbsp&nbsp称</td>
+                    <td>学&nbsp&nbsp生&nbsp&nbsp学&nbsp&nbsp号</td>
+                    <td>学&nbsp&nbsp生&nbsp&nbsp姓&nbsp&nbsp名</td>
+                    <td>课&nbsp&nbsp程&nbsp&nbsp学&nbsp&nbsp分</td>
+                    <td>成&nbsp&nbsp&nbsp绩</td>
+                </tr>
+                {# {% for course in course_inform_check %} #}
+                {% for info in all_info %}
+                    <tr>
+                        <td>{{ info.course_info.cid }}</td>
+                        <td>{{ info.course_info.name }}</td>
+                        <td>{{ info.teacher_info.name }}</td>
+                        <td>
+                            {% if info.grade == '-1' %}
+                                未给成绩
+                            {% else %}
+                                {{ info.grade }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a class="btn btn-danger" href="del_select_course?sid={{ info.course_info.cid }}">修改成绩</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
     </div>
-
-
 {% endblock %}
