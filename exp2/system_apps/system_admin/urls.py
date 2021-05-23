@@ -20,6 +20,9 @@ from . import views
 urlpatterns = [
     # student urls
     path("find_student", views.find_student),
+    path("add_student", views.add_student),
+    path("alter_student", views.alter_student),
+    path("del_student", views.del_student),
 
     # teacher urls
     path("find_teacher", views.find_teacher),

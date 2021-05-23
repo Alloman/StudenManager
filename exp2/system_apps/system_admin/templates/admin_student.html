@@ -1,12 +1,12 @@
 {% extends "admin_base.html" %}
 
 {% block info %}
+    <h3>学生信息表</h3>
     <div class="inf">
-        <h3>学生信息表</h3>
-        {% csrf_token %}
         <div>
-            <a class="btn btn-primary">+ 添加</a>
+            <a class="btn btn-primary" id="add_student">+ 添加</a>
         </div>
+        <br>
         <div class="guodong">
             <table class="table table-hover">
                 <tr class="table-primary">
@@ -15,28 +15,262 @@
                     <td>性&nbsp&nbsp&nbsp别</td>
                     <td>年&nbsp&nbsp&nbsp级</td>
                     <td>身&nbsp&nbsp份&nbsp&nbsp证&nbsp&nbsp号</td>
+                    <td>电&nbsp&nbsp&nbsp话</td>
                     <td>班&nbsp&nbsp&nbsp级</td>
+                    <td>操&nbsp&nbsp&nbsp作</td>
                 </tr>
-                {# {% for course in course_inform_check %} #}
-                {% for info in all_info %}
+                {% for info in stu_list %}
                     <tr>
-                        <td>{{ info.course_info.cid }}</td>
-                        <td>{{ info.course_info.name }}</td>
-                        <td>{{ info.teacher_info.name }}</td>
+                        <td>{{ info.sid }}</td>
+                        <td>{{ info.name }}</td>
                         <td>
-                            {% if info.grade == '-1' %}
-                                未给成绩
+                            {% if info.sex == "1" %}
+                                男
                             {% else %}
-                                {{ info.grade }}
+                                女
                             {% endif %}
                         </td>
+                        <td>{{ info.grade }}</td>
+                        <td>{{ info.id }}</td>
+                        <td>{{ info.phone }}</td>
+                        <td>{{ info.cls_name }}</td>
                         <td>
-                            <a class="btn btn-danger" href="del_select_course?sid={{ info.course_info.cid }}">修改</a>
-                            <a class="btn btn-danger" href="del_select_course?sid={{ info.course_info.cid }}">删除</a>
+                            <a class="btn btn-primary table_alter_info">修改</a>
+                            <a class="btn btn-danger" href="del_student?sid={{ info.sid }}">删除</a>
                         </td>
                     </tr>
                 {% endfor %}
             </table>
         </div>
     </div>
+{% endblock %}
+
+{% block windnows %}
+    <div id='shadow' class="shadow hide"></div>
+    <div id='add_student_info' class="modal1 hide">
+        <div style="padding: 0 10px;">
+            <h3 style="margin-top: 10px;">添加学生信息</h3>
+            <br>
+            <form>
+                <div class="input-group mb-3" style="padding: 0 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">学号</span>
+                    </div>
+                    <input id='add_sid' type="text" class="form-control" name="add_sid" placeholder="学号"
+                           aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"/>
+                </div>
+                <div class="input-group mb-3" style="padding: 0 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">姓名</span>
+                    </div>
+                    <input id='add_sname' type="text" class="form-control" name="add_sname" placeholder="姓名"
+                           aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"/>
+                </div>
+                <div class="input-group mb-3" style="padding: 0 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">性别</span>
+                    </div>
+                    <input id='add_sex' type="text" class="form-control" name="add_sex" placeholder="性别"
+                           aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"/>
+                </div>
+                <div class="input-group mb-3" style="padding: 0 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">年级</span>
+                    </div>
+                    <input id='add_grade' type="text" class="form-control" name="add_grade" placeholder="年级"
+                           aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"/>
+                </div>
+                <div class="input-group mb-3" style="padding: 0 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">身份证号</span>
+                    </div>
+                    <input id='add_id' type="text" class="form-control" name="add_id" placeholder="身份证号"
+                           aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"/>
+                </div>
+                <div class="input-group mb-3" style="padding: 0 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">电话</span>
+                    </div>
+                    <input id='add_phone' type="text" class="form-control" name="add_phone" placeholder="电话"
+                           aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"/>
+                </div>
+                <div class="input-group mb-3" style="padding: 0 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">班级</span>
+                    </div>
+                    <input id='add_cls_name' type="text" class="form-control" name="add_cls_name" placeholder="班级"
+                           aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"/>
+                </div>
+            </form>
+            <input id="btnAdd" class="bttn bttn-primary" type="button" value="添加"/>
+            <input class="btnCancel bttn bttn-secondary" type="button" value="取消"/>
+            <span id="errormsg" style="color: #ff0000"></span>
+        </div>
+    </div>
+
+    <div id='shadow' class="shadow hide"></div>
+    <div id='alter_student_info' class="modal1 hide">
+        <div style="padding: 0 10px;">
+            <h3 style="margin-top: 10px;">修改学生信息</h3>
+            <br>
+            <form>
+                <div class="input-group mb-3" style="padding: 0 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">学号</span>
+                    </div>
+                    <input id='alter_sid' type="text" class="form-control" name="alter_sid" placeholder="学号"
+                           aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"/>
+                </div>
+                <div class="input-group mb-3" style="padding: 0 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">姓名</span>
+                    </div>
+                    <input id='alter_sname' type="text" class="form-control" name="alter_sname" placeholder="姓名"
+                           aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"/>
+                </div>
+                <div class="input-group mb-3" style="padding: 0 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">性别</span>
+                    </div>
+                    <input id='alter_sex' type="text" class="form-control" name="alter_sex" placeholder="性别"
+                           aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"/>
+                </div>
+                <div class="input-group mb-3" style="padding: 0 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">年级</span>
+                    </div>
+                    <input id='alter_grade' type="text" class="form-control" name="alter_grade" placeholder="年级"
+                           aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"/>
+                </div>
+                <div class="input-group mb-3" style="padding: 0 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">身份证号</span>
+                    </div>
+                    <input id='alter_id' type="text" class="form-control" name="alter_id" placeholder="身份证号"
+                           aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"/>
+                </div>
+                <div class="input-group mb-3" style="padding: 0 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">电话</span>
+                    </div>
+                    <input id='alter_phone' type="text" class="form-control" name="alter_phone" placeholder="电话"
+                           aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"/>
+                </div>
+                <div class="input-group mb-3" style="padding: 0 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">班级</span>
+                    </div>
+                    <input id='alter_cls_name' type="text" class="form-control" name="alter_cls_name" placeholder="班级"
+                           aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"/>
+                </div>
+            </form>
+            <input id="btnAlter" class="bttn bttn-primary" type="button" value="修改"/>
+            <input class="btnCancel bttn bttn-secondary" type="button" value="取消"/>
+            <span id="errormsg" style="color: #ff0000"></span>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script src="/static/js/jquery-2.2.4.min.js"></script>
+    <script>
+        $(function () {
+            click_add_student();
+            add_student();
+            click_alter();
+            alter();
+            cancel();
+        })
+
+        function click_add_student(){
+            $("#add_student").click(function (){
+                $("#shadow").removeClass("hide");
+                $("#add_student_info").removeClass("hide");
+
+                $('#add_sid').val('');
+                $('#add_sname').val('');
+                $('#add_sex').val('');
+                $('#add_grade').val('');
+                $('#add_id').val('');
+                $('#add_phone').val('');
+                $('#add_cls_name').val('');
+
+            });
+        }
+
+        function add_student(){
+            $("#btnAdd").click(function (){
+                $.ajax({
+                    url: '/system_admin/add_student',
+                    type: 'post',
+                    data: {'sid': $('#add_sid').val(), 'sname': $('#add_sname').val(),'sex': $('#add_sex').val(),
+                    'grade': $('#add_grade').val(),'id': $('#add_id').val(),'phone': $('#add_phone').val(),
+                    'cls_name': $('#add_cls_name').val(),},
+                    dataType: 'JSON',
+                    success: function (arg) {
+
+                        if (arg.status) {
+                            location.reload();
+                        } else {
+                            $('#errormsg').text(arg.message);
+                        }
+                    }
+                });
+            });
+        }
+
+        function click_alter() {
+            $(".table_alter_info").click(function () {
+                $("#shadow").removeClass("hide");
+                $("#alter_student_info").removeClass("hide");
+
+                var row = $(this).parent().prevAll();
+
+                var sid = $.trim($(row[6]).text());
+                var sname = $.trim($(row[5]).text());
+                var sex = $.trim($(row[4]).text());
+                var grade = $.trim($(row[3]).text());
+                var id = $.trim($(row[2]).text());
+                var phone = $.trim($(row[1]).text());
+                var cls_name = $.trim($(row[0]).text());
+
+                $('#alter_sid').val(sid);
+                $('#alter_sname').val(sname);
+                $('#alter_sex').val(sex);
+                $('#alter_grade').val(grade);
+                $('#alter_id').val(id);
+                $('#alter_phone').val(phone);
+                $('#alter_cls_name').val(cls_name);
+            });
+        }
+
+        function alter() {
+            $('#btnAlter').click(function () {
+                $.ajax({
+                    url: '/system_admin/alter_student',
+                    type: 'post',
+                    data: {'sid': $('#alter_sid').val(), 'sname': $('#alter_sname').val(),'sex': $('#alter_sex').val(),
+                    'grade': $('#alter_grade').val(),'id': $('#alter_id').val(),'phone': $('#alter_phone').val(),
+                    'cls_name': $('#alter_cls_name').val(),},
+                    dataType: 'JSON',
+                    success: function (arg) {
+
+                        if (arg.status) {
+                            location.reload();
+                        } else {
+                            $('#errormsg').text(arg.message);
+                        }
+                    }
+                });
+            });
+        }
+
+        function cancel() {
+            $('.btnCancel').click(function () {
+                $('#shadow,#add_student_info').addClass('hide');
+                $('#shadow,#alter_student_info').addClass('hide');
+            });
+        }
+
+    </script>
 {% endblock %}

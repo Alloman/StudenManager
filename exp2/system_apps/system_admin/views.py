@@ -20,13 +20,79 @@ def find_student(request):
     return render(request, "admin_student.html", locals())
 
 def add_student(request):
-    pass
+    sid = request.POST["sid"]
+    sname = request.POST["sname"]
+    sex = request.POST["sex"]
+    grade = request.POST["grade"]
+    id = request.POST["id"]
+    phone = request.POST["phone"]
+    cls_name = request.POST["cls_name"]
+    ret = {'status': True, 'message': None}
+
+    if sex == "男":
+        sex = "1"
+    elif sex == "女":
+        sex = "0"
+    else:
+        ret['status'] = False
+        ret['message'] = '处理异常'
+        return HttpResponse("<h1>非法性别！！</h1>")
+
+    Student.objects.create(sid=sid, name=sname, sex=sex, grade=grade, id=id, phone=phone, cls_name=cls_name)
+
+    import json
+    return HttpResponse(json.dumps(ret))
+
 
 def alter_student(request):
-    pass
+    # 获取信息
+    sid = request.POST["sid"]
+    sname = request.POST["sname"]
+    sex = request.POST["sex"]
+    grade = request.POST["grade"]
+    id = request.POST["id"]
+    phone = request.POST["phone"]
+    cls_name = request.POST["cls_name"]
+    ret = {'status': True, 'message': None}
+
+    # 处理特殊信息
+    if sex == "男":
+        sex = "1"
+    elif sex == "女":
+        sex = "0"
+    else:
+        ret['status'] = False
+        ret['message'] = '处理异常'
+        return HttpResponse("<h1>非法性别！！</h1>")
+
+    # 修改信息
+    stu = Student.objects.get(sid=sid)
+
+    stu.name = sname
+    stu.sex = sex
+    stu.grade = grade
+    stu.id = id
+    stu.phone = phone
+    stu.cls_name = cls_name
+
+    stu.save()
+
+    import json
+    return HttpResponse(json.dumps(ret))
+
 
 def del_student(request):
-    pass
+    if request.session["position"] != "1":
+        return HttpResponse("<h1>无权限</h1>")
+
+    sid = request.GET['sid']
+    stu = Student.objects.get(sid=sid)
+    stu.delete()
+
+    sid = request.session["user_id"]
+    stu_list = Student.objects.all()
+
+    return render(request, "admin_student.html", locals())
 
 
 
