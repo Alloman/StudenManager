@@ -32,6 +32,9 @@ urlpatterns = [
 
     # course urls
     path("find_course", views.find_course),
+    path("add_course", views.add_course),
+    path("alter_course", views.alter_course),
+    path("del_course", views.del_course),
 
     # grade urls
     path("find_grade", views.find_grade),

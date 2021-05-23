@@ -24,7 +24,8 @@ def find_student(request):
 def add_student(request):
     if request.session["position"] != "1":
         return HttpResponse("<h1>无权限</h1>")
-    sid = request.POST["sid"]
+    sid = request.session["user_id"]
+    stu_sid = request.POST["sid"]
     sname = request.POST["sname"]
     sex = request.POST["sex"]
     grade = request.POST["grade"]
@@ -42,7 +43,7 @@ def add_student(request):
         ret['message'] = '处理异常'
         return HttpResponse("<h1>非法性别！！</h1>")
 
-    Student.objects.create(sid=sid, name=sname, sex=sex, grade=grade, id=id, phone=phone, cls_name=cls_name)
+    Student.objects.create(sid=stu_sid, name=sname, sex=sex, grade=grade, id=id, phone=phone, cls_name=cls_name)
 
     import json
     return HttpResponse(json.dumps(ret))
@@ -51,8 +52,9 @@ def add_student(request):
 def alter_student(request):
     if request.session["position"] != "1":
         return HttpResponse("<h1>无权限</h1>")
+    sid = request.session["user_id"]
     # 获取信息
-    sid = request.POST["sid"]
+    stu_sid = request.POST["sid"]
     sname = request.POST["sname"]
     sex = request.POST["sex"]
     grade = request.POST["grade"]
@@ -72,7 +74,7 @@ def alter_student(request):
         return HttpResponse("<h1>非法性别！！</h1>")
 
     # 修改信息
-    stu = Student.objects.get(sid=sid)
+    stu = Student.objects.get(sid=stu_sid)
 
     stu.name = sname
     stu.sex = sex
@@ -90,9 +92,10 @@ def alter_student(request):
 def del_student(request):
     if request.session["position"] != "1":
         return HttpResponse("<h1>无权限</h1>")
+    sid = request.session["user_id"]
 
-    sid = request.GET['sid']
-    stu = Student.objects.get(sid=sid)
+    stu_sid = request.GET['sid']
+    stu = Student.objects.get(sid=stu_sid)
     stu.delete()
 
     sid = request.session["user_id"]
@@ -114,6 +117,7 @@ def find_teacher(request):
 def add_teacher(request):
     if request.session["position"] != "1":
         return HttpResponse("<h1>无权限</h1>")
+    sid = request.session["user_id"]
     tid = request.POST["tid"]
     tname = request.POST["tname"]
     sex = request.POST["sex"]
@@ -138,6 +142,7 @@ def add_teacher(request):
 def alter_teacher(request):
     if request.session["position"] != "1":
         return HttpResponse("<h1>无权限</h1>")
+    sid = request.session["user_id"]
     # 获取信息
     tid = request.POST["tid"]
     tname = request.POST["tname"]
@@ -172,8 +177,8 @@ def alter_teacher(request):
 def del_teacher(request):
     if request.session["position"] != "1":
         return HttpResponse("<h1>无权限</h1>")
-
-    print(request.GET)
+    sid = request.session["user_id"]
+    
     tid = request.GET['tid']
     tea = Teacher.objects.get(tid=tid)
     tea.delete()
@@ -189,6 +194,14 @@ def del_teacher(request):
 def find_course(request):
     sid = request.session["user_id"]
     course_list = Course.objects.all()
+    all_info = []
+    for course in course_list:
+        info = {
+            "course": course,
+            "tname": Teacher.objects.get(tid=course.tid).name
+        }
+
+        all_info.append(info)
 
     return render(request, "admin_course.html", locals())
 
@@ -199,7 +212,18 @@ def alter_course(request):
     pass
 
 def del_course(request):
-    pass
+    if request.session["position"] != "1":
+        return HttpResponse("<h1>无权限</h1>")
+    sid = request.session["user_id"]
+
+    cid = request.GET['cid']
+    course = Course.objects.get(cid=cid)
+    course.delete()
+
+    sid = request.session["user_id"]
+    tea_list = Teacher.objects.all()
+
+    return render(request, "admin_teacher.html", locals())
 
 
 
@@ -212,7 +236,7 @@ def find_grade(request):
     for info in select_list:
         cid = info.cid
         cname = Course.objects.get(cid=info.cid).name
-        sid = info.sid
+        stu_sid = info.sid
         sname = Student.objects.get(sid=info.sid).name
         tname = Teacher.objects.get(tid=info.tid).name
         credit = Course.objects.get(cid=info.cid).credit
@@ -221,7 +245,7 @@ def find_grade(request):
         info_list.append({
             "cid" : cid,
             "cname" : cname,
-            "sid" : sid,
+            "sid" : stu_sid,
             "sname" : sname,
             "tname" : tname,
             "credit" : credit,
@@ -233,19 +257,21 @@ def find_grade(request):
 def alter_grade(request):
     if request.session["position"] != "1":
         return HttpResponse("<h1>无权限</h1>")
+    sid = request.session["user_id"]
 
     cid = request.POST['cid']
-    sid = request.POST['sid']
+    stu_sid = request.POST['sid']
     grade = request.POST['grade']
     ret = {'status': True, 'message': None}
 
     if grade == "-1":
         grade = "-1"
-        s_g = Select_Course.objects.get(cid=cid, sid=sid)
+        s_g = Select_Course.objects.get(cid=cid, sid=stu_sid)
         s_g.grade = grade
         s_g.save()
     elif int(grade) > -1 and int(grade) < 101:
-        s_g = Select_Course.objects.get(cid=cid, sid=sid)
+        s_g = Select_Course.objects.get(cid=cid, sid=stu_sid)
+        s_g = Select_Course.objects.get(cid=cid, sid=stu_sid)
         s_g.grade = grade
         s_g.save()
     else:
