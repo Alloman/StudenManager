@@ -26,6 +26,9 @@ urlpatterns = [
 
     # teacher urls
     path("find_teacher", views.find_teacher),
+    path("add_teacher", views.add_teacher),
+    path("alter_teacher", views.alter_teacher),
+    path("del_teacher", views.del_teacher),
 
     # course urls
     path("find_course", views.find_course),

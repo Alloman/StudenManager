@@ -14,12 +14,16 @@ def admin_index(request):
 
 # student funcsion
 def find_student(request):
+    if request.session["position"] != "1":
+        return HttpResponse("<h1>无权限</h1>")
     sid = request.session["user_id"]
     stu_list = Student.objects.all()
 
     return render(request, "admin_student.html", locals())
 
 def add_student(request):
+    if request.session["position"] != "1":
+        return HttpResponse("<h1>无权限</h1>")
     sid = request.POST["sid"]
     sname = request.POST["sname"]
     sex = request.POST["sex"]
@@ -45,6 +49,8 @@ def add_student(request):
 
 
 def alter_student(request):
+    if request.session["position"] != "1":
+        return HttpResponse("<h1>无权限</h1>")
     # 获取信息
     sid = request.POST["sid"]
     sname = request.POST["sname"]
@@ -98,19 +104,84 @@ def del_student(request):
 
 # teacher funcsion
 def find_teacher(request):
+    if request.session["position"] != "1":
+        return HttpResponse("<h1>无权限</h1>")
     sid = request.session["user_id"]
     tea_list = Teacher.objects.all()
 
     return render(request, "admin_teacher.html", locals())
 
 def add_teacher(request):
-    pass
+    if request.session["position"] != "1":
+        return HttpResponse("<h1>无权限</h1>")
+    tid = request.POST["tid"]
+    tname = request.POST["tname"]
+    sex = request.POST["sex"]
+    id = request.POST["id"]
+    phone = request.POST["phone"]
+    ret = {'status': True, 'message': None}
+
+    if sex == "男":
+        sex = "1"
+    elif sex == "女":
+        sex = "0"
+    else:
+        ret['status'] = False
+        ret['message'] = '处理异常'
+        return HttpResponse("<h1>非法性别！！</h1>")
+
+    Teacher.objects.create(tid=tid, name=tname, sex=sex, id=id, phone=phone)
+
+    import json
+    return HttpResponse(json.dumps(ret))
 
 def alter_teacher(request):
-    pass
+    if request.session["position"] != "1":
+        return HttpResponse("<h1>无权限</h1>")
+    # 获取信息
+    tid = request.POST["tid"]
+    tname = request.POST["tname"]
+    sex = request.POST["sex"]
+    id = request.POST["id"]
+    phone = request.POST["phone"]
+    ret = {'status': True, 'message': None}
+
+    # 处理特殊信息
+    if sex == "男":
+        sex = "1"
+    elif sex == "女":
+        sex = "0"
+    else:
+        ret['status'] = False
+        ret['message'] = '处理异常'
+        return HttpResponse("<h1>非法性别！！</h1>")
+
+    # 修改信息
+    tea = Teacher.objects.get(tid=tid)
+
+    tea.name = tname
+    tea.sex = sex
+    tea.id = id
+    tea.phone = phone
+
+    tea.save()
+
+    import json
+    return HttpResponse(json.dumps(ret))
 
 def del_teacher(request):
-    pass
+    if request.session["position"] != "1":
+        return HttpResponse("<h1>无权限</h1>")
+
+    print(request.GET)
+    tid = request.GET['tid']
+    tea = Teacher.objects.get(tid=tid)
+    tea.delete()
+
+    sid = request.session["user_id"]
+    tea_list = Teacher.objects.all()
+
+    return render(request, "admin_teacher.html", locals())
 
 
 
