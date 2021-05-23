@@ -29,6 +29,7 @@ urlpatterns = [
 
     # grade urls
     path("find_grade", views.find_grade),
+    path("alter_grade", views.alter_grade),
 
     # public urls
     path("", views.admin_index),

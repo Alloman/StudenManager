@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from ..student.models import Student
 from ..course.models import Course, Select_Course
 from ..teacher.models import Teacher
+from django.http import HttpResponse
 
 # Create your views here.
 
@@ -72,14 +73,18 @@ def find_grade(request):
     info_list = []
 
     for info in select_list:
+        cid = info.cid
         cname = Course.objects.get(cid=info.cid).name
+        sid = info.sid
         sname = Student.objects.get(sid=info.sid).name
         tname = Teacher.objects.get(tid=info.tid).name
         credit = Course.objects.get(cid=info.cid).credit
         grade  = info.grade
 
         info_list.append({
+            "cid" : cid,
             "cname" : cname,
+            "sid" : sid,
             "sname" : sname,
             "tname" : tname,
             "credit" : credit,
@@ -89,7 +94,27 @@ def find_grade(request):
     return render(request, "admin_grade.html", locals())
 
 def alter_grade(request):
-    pass
+    if request.session["position"] != "1":
+        return HttpResponse("<h1>无权限</h1>")
 
-def del_grade(request):
-    pass
+    cid = request.POST['cid']
+    sid = request.POST['sid']
+    grade = request.POST['grade']
+    ret = {'status': True, 'message': None}
+
+    if grade == "-1":
+        grade = "-1"
+        s_g = Select_Course.objects.get(cid=cid, sid=sid)
+        s_g.grade = grade
+        s_g.save()
+    elif int(grade) > -1 and int(grade) < 101:
+        s_g = Select_Course.objects.get(cid=cid, sid=sid)
+        s_g.grade = grade
+        s_g.save()
+    else:
+        ret['status'] = False
+        ret['message'] = '处理异常'
+        return HttpResponse("<h1>非法成绩！！</h1>")
+
+    import json
+    return HttpResponse(json.dumps(ret))

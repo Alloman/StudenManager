@@ -98,7 +98,6 @@
 {% block js %}
     <script src="/static/js/jquery-2.2.4.min.js"></script>
     <script>
-        //使用JQuery绑定事件
         $(function () {
             click_alter();
             alter();
@@ -134,9 +133,8 @@
                     url: '/teacher/update_grade',
                     type: 'post',
                     data: {'cid': $('#cid').val(), 'sid': $('#sid').val(), 'grade': $('#grade').val()},
-                    dataType: 'JSON',//JSON.parse(arg)
+                    dataType: 'JSON',
                     success: function (arg) {
-                        //arg = JSON.parse(arg);
                         if (arg.status) {
                             location.reload();
                         } else {
