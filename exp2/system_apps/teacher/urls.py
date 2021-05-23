@@ -15,7 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from . import views
 
 urlpatterns = [
-
+    path("submit_grade", views.submit_grade),
+    path("find_no_grade_info", views.find_no_grade_info),
+    path("update_grade", views.update_grade),
+    path("find_teach_student", views.find_teach_student),
+    path("", views.teacher_index),
 ]

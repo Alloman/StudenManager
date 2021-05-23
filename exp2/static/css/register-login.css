@@ -1,7 +1,4 @@
 		/*
-			create by zrong.me
-			请大家关注我的个人微博 说Z先生爱你
-			也请大家关注我的个人网站 zrong.me
 		*/
 		*{
 			padding: 0;
@@ -70,7 +67,6 @@
 			width: 80px;
 			height: 74px;
 			margin: 0 auto;
-			background: url('../images/logo220.png') no-repeat;
 			background-size: contain;
 		}
 		.cent-box-header .sub-title{

@@ -2,7 +2,7 @@
 
 {% block info %}
     <div class="inf">
-        <h3>无成绩学生信息表</h3>
+        <h3>学生成绩信息表</h3>
         {% csrf_token %}
         <div class="guodong">
             <table class="table table-hover">
@@ -13,26 +13,144 @@
                     <td>学&nbsp&nbsp生&nbsp&nbsp姓&nbsp&nbsp名</td>
                     <td>课&nbsp&nbsp程&nbsp&nbsp学&nbsp&nbsp分</td>
                     <td>成&nbsp&nbsp&nbsp绩</td>
+                    <td>操&nbsp&nbsp&nbsp作</td>
                 </tr>
                 {# {% for course in course_inform_check %} #}
-                {% for info in all_info %}
+                {% for info in no_grade_info_list %}
                     <tr>
-                        <td>{{ info.course_info.cid }}</td>
-                        <td>{{ info.course_info.name }}</td>
-                        <td>{{ info.teacher_info.name }}</td>
+                        <td>{{ info.cid }}</td>
+                        <td>{{ info.cname }}</td>
+                        <td>{{ info.sid }}</td>
+                        <td>{{ info.sname }}</td>
+                        <td>{{ info.credit }}</td>
+                        <td>{{ info.grade }}</td>
                         <td>
-                            {% if info.grade == '-1' %}
-                                未给成绩
-                            {% else %}
-                                {{ info.grade }}
-                            {% endif %}
-                        </td>
-                        <td>
-                            <a class="btn btn-danger" href="del_select_course?sid={{ info.course_info.cid }}">添加成绩</a>
+                            <a class="btn btn-primary">修改成绩</a>
                         </td>
                     </tr>
                 {% endfor %}
             </table>
         </div>
     </div>
+{% endblock %}
+
+
+{% block windnows %}
+    <div id='shadow' class="shadow hide"></div>
+    <div id='alter_grade' class="modal1 hide">
+        <div style="padding: 0 10px;">
+            <h3 style="margin-top: 10px;">修改学生成绩</h3>
+            <br>
+            <form>
+                <div class="input-group mb-3" style="padding: 0 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">课程编号</span>
+                    </div>
+                    <input id='cid' type="text" class="form-control" name="cid" placeholder="课程编号" readonly="readonly"
+                           aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"/>
+                </div>
+                <div class="input-group mb-3" style="padding: 0 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">课程名称</span>
+                    </div>
+                    <input id='cname' type="text" class="form-control" name="cname" placeholder="课程名称"
+                           readonly="readonly"
+                           aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"/>
+                </div>
+                <div class="input-group mb-3" style="padding: 0 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">学生学号</span>
+                    </div>
+                    <input id='sid' type="text" class="form-control" name="sid" placeholder="学生学号" readonly="readonly"
+                           aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"/>
+                </div>
+                <div class="input-group mb-3" style="padding: 0 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">学生姓名</span>
+                    </div>
+                    <input id='sname' type="text" class="form-control" name="sname" placeholder="学生姓名"
+                           readonly="readonly"
+                           aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"/>
+                </div>
+                <div class="input-group mb-3" style="padding: 0 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">课程学分</span>
+                    </div>
+                    <input id='credit' type="text" class="form-control" name="credit" placeholder="课程学分"
+                           readonly="readonly"
+                           aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"/>
+                </div>
+                <div class="input-group mb-3" style="padding: 0 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">课程成绩</span>
+                    </div>
+                    <input id='grade' type="text" class="form-control" name="grade" placeholder="成绩"
+                           aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"/>
+                </div>
+            </form>
+            <input id="btnAlter" class="bttn bttn-primary" type="button" value="修改"/>
+            <input class="btnCancel bttn bttn-secondary" type="button" value="取消"/>
+            <span id="errormsg" style="color: #ff0000"></span>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script src="/static/js/jquery-2.2.4.min.js"></script>
+    <script>
+        //使用JQuery绑定事件
+        $(function () {
+            click_alter();
+            alter();
+            cancel();
+        })
+
+        function click_alter() {
+            $(".btn").click(function () {
+                $("#shadow").removeClass("hide");
+                $("#alter_grade").removeClass("hide");
+
+                var row = $(this).parent().prevAll();
+
+                var cid = $(row[5]).text();
+                var cname = $(row[4]).text();
+                var sid = $(row[3]).text();
+                var sname = $(row[2]).text();
+                var credit = $(row[1]).text();
+                var grade = $(row[0]).text();
+
+                $('#cid').val(cid);
+                $('#cname').val(cname);
+                $('#sid').val(sid);
+                $('#sname').val(sname);
+                $('#credit').val(credit);
+                $('#grade').val(grade)
+            });
+        }
+
+        function alter() {
+            $('#btnAlter').click(function () {
+                $.ajax({
+                    url: '/teacher/update_grade',
+                    type: 'post',
+                    data: {'cid': $('#cid').val(), 'sid': $('#sid').val(), 'grade': $('#grade').val()},
+                    dataType: 'JSON',//JSON.parse(arg)
+                    success: function (arg) {
+                        //arg = JSON.parse(arg);
+                        if (arg.status) {
+                            location.reload();
+                        } else {
+                            $('#errormsg').text(arg.message)
+                        }
+                    }
+                })
+            });
+        }
+
+        function cancel() {
+            $('.btnCancel').click(function () {
+                $('#shadow,#alter_grade').addClass('hide')
+            });
+        }
+    </script>
 {% endblock %}
